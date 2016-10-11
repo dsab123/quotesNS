@@ -4,7 +4,9 @@ var router = require('express').Router();
 
 router.get('/mypath/myentity', function(req, res) {
 	// Do stuff here
-	res.status(200).send('Everything worked out fine').end();
+	res.status(200);
+    res.send('Everything worked out fine');
+    res.end();
 });
  
 module.exports = router;
