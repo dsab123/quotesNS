@@ -1,7 +1,6 @@
 'use strict';
     
-va express = require('express');
-var router = express.Router();
+var router = require('express').Router();
 
 router.get('/mypath/myentity', function(req, res) {
 	// Do stuff here

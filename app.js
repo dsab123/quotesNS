@@ -6,7 +6,7 @@ var path = require('path');
 var express = require('express');
 var app = express();
 //var quotes = require('./controllers/quotes');
-var routes = require('./routes/myRoutes');
+var routes = require('./routes');
 
 app.use(json());
 app.use('/', routes);

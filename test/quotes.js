@@ -16,13 +16,16 @@ var expressRouteFake = require('express-route-fake');
 			}
 		};
 
-		mockery.enable();
+		mockery.enable({
+            warnOnReplace: false,
+            warnOnUnregistered: false
+        });
 		mockery.resetCache();
 		expressRouteFake.reset();
 		
 		mockery.registerMock('express', 'expressRouteFake');
 		//quotes = require('../controllers/quotes');
-		routes = require('../routes/myRoutes');
+		routes = require('../routes');
 	});
 	
 	afterEach(function() {
@@ -34,12 +37,10 @@ var expressRouteFake = require('express-route-fake');
 describe("quotes.send tests -- ", function() {
 	it ("is a sanity test", function() {
 		//expect(quotes.send(null, null, null).to.equal({ error : null }));
-		//var routeAction = expressRouteFake.getRouteAction('get', '/mypath/myentity');
- 		  var routeAction = expressRouteFake.getRouteAction('get', '/mypath/myentity');
+ 	    var routeAction = expressRouteFake.getRouteAction('get', '/mypath/myentity');
 
 		routeAction(req, res);
 
 		assert(res.status == 200);
 	});
-
 });
