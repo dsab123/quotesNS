@@ -1,11 +1,13 @@
 'use strict';
 
-//var routes; // have to require this after regsitering the mocks because of the changes mockery makes to the node module cache
-var routes;// = require('../routes');
 var chai  = require("chai");
 var expect = chai.expect;
 var mockery = require("mockery");
 var expressRouteFake = require('express-route-fake');
+
+var routes; // have to require this after regsitering the mocks because of the changes mockery makes to the node module cache
+
+var quotes; 
 
 describe("quotes.send tests -- ", function() {
 	var res;
@@ -38,7 +40,7 @@ describe("quotes.send tests -- ", function() {
 		expressRouteFake.reset();
 		
 		mockery.registerMock('express', expressRouteFake);
-		//quotes = require('../controllers/quotes');
+		quotes = require('../controllers/quotes');
 		routes = require('../routes');
 	});
 	
@@ -48,7 +50,7 @@ describe("quotes.send tests -- ", function() {
 	});
 	
 	
-	it ("is a sanity test", function() {
+	it ("is a sanity test for the get path", function() {
 		//expect(quotes.send(null, null, null).to.equal({ error : null }));
  	    var routeAction = expressRouteFake.getRouteAction('get', '/mypath/myentity');
 
@@ -56,5 +58,13 @@ describe("quotes.send tests -- ", function() {
 
 		expect(res.resData.status).to.equal(200);
 	});
+
+    it ("is a sanity test for the post \\quote path", function() {
+        var routeAction = expressRouteFake.getRouteAction('post', '/quote');
+
+        routeAction(req, res);
+
+        expect(res.resData.status).to.equal(200);
+    });
 });
 
