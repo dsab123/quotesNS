@@ -1,5 +1,18 @@
 var redis = require('../lib/redis');
 
+
+
+/**
+ * Create new channel
+ * @param {String} channel
+ * @param {Function} callback
+ */
+
+exports.createChannel = function(channel, callback) {
+    // is this possible?
+};
+
+
 /**
  * Save quotes to database
  * @param {Array} quotes
