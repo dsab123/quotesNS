@@ -9,21 +9,21 @@ var routes; // have to require this after regsitering the mocks because of the c
 
 var quotes; 
 
-describe("quotes.send tests -- ", function() {
+describe("quotes sanity tests -- ", function() {
 	var res;
-    var req;
+	var req;
 
 	beforeEach(function() {
 		req = {};
 		res = {
-            resData: {
-                status: 0,
-                response: ''
-            },
-			status: function(statusCode) {
-                console.log('inside status');
-				res.resData.status = statusCode;
-			},
+            	resData: {
+                	status: 0,
+                	response: ''
+            	},
+		status: function(statusCode) {
+			console.log('inside status');
+			res.resData.status = statusCode;
+		},
             send: function(response) {
                 console.log('inside send');
                 res.resData.response = response;
@@ -51,7 +51,6 @@ describe("quotes.send tests -- ", function() {
 	
 	
 	it ("is a sanity test for the get path", function() {
-		//expect(quotes.send(null, null, null).to.equal({ error : null }));
  	    var routeAction = expressRouteFake.getRouteAction('get', '/mypath/myentity');
 
 		routeAction(req, res);
@@ -60,6 +59,8 @@ describe("quotes.send tests -- ", function() {
 	});
 
     it ("is a sanity test for the post \\quote path", function() {
+	if (expressRouteFake == null)
+		console.log('why this joint null?');
         var routeAction = expressRouteFake.getRouteAction('post', '/quote');
 
         routeAction(req, res);
@@ -68,3 +69,46 @@ describe("quotes.send tests -- ", function() {
     });
 });
 
+/*
+describe("quotes redis tests -- ", function() {
+	var redisFake;
+	
+
+	beforeEach(function() {
+		var req = {};
+		var res = {
+            	resData: {
+                	status: 0,
+                	response: ''
+            	},
+		status: function(statusCode) {
+			console.log('inside status');
+			res.resData.status = statusCode;
+		},
+            send: function(response) {
+                console.log('inside send');
+                res.resData.response = response;
+            },
+            end: function() { }
+		};
+
+	mockery.enable({
+            warnOnReplace: false,
+            warnOnUnregistered: false
+        });
+
+		mockery.resetCache();
+		expressRouteFake.reset();
+		
+		mockery.registerMock('express', expressRouteFake);
+		mockery.registerMock('redis', redisFake);
+		quotes = require('../controllers/quotes');
+		routes = require('../routes');
+	});
+
+	it ("sanity test", function() {
+		
+	});
+
+});
+*/
