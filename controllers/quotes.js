@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('underscore');
-var redis = require('../lib/redis');
+//var redis = require('../lib/redis');
 
 exports.save = function(req, res, next) {
     console.log("inside of quotes.save!");

@@ -10,6 +10,15 @@ router.get('/mypath/myentity', function(req, res) {
     res.end();
 });
 
-router.post('/quote', quotes.save, quotes.send);
+/*
+router.post('/quote', function(req, res) {
+	res.status(200);
+    res.send('Everything worked out fine for POST');
+    res.end();
+
+});
+*/
+
+router.post('/quote', quotes.save, quotes.send); 
 
 module.exports = router;
