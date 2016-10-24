@@ -21,6 +21,7 @@ exports.createChannel = function(channel, callback) {
  */
 
 exports.save = function(quotes, callback) {
-    var quote = quotes.pop();
+    console.log('models.save called!');
+    //var quote = quotes.pop();
     // do something with redis; lpush or pubsub or what?
 };

@@ -1,14 +1,19 @@
 'use strict';
 
 var _ = require('underscore');
-//var redis = require('../lib/redis');
+var model = require('../models/quotes');
 
 exports.save = function(req, res, next) {
     console.log("inside of quotes.save!");
 
     // do something with redis layer?
+    model.save('', function(err) {
+        console.log('inside models.save anon function');
+        next();
+        
+    });
 
-    next();
+
 };  
 
 exports.send = function(req, res, next) {

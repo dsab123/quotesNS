@@ -1,69 +1,56 @@
-'use strict';
-
-var chai  = require('chai');
+var sinon = require('sinon');
+var chai = require('chai');
 var expect = chai.expect;
 var mockery = require('mockery');
-var expressRouteFake = require('express-route-fake');
+var routes = require('../routes');
+var quotes;// = require('../controllers/quotes');
 
-var routes; // have to require this after regsitering the mocks because of the changes mockery makes to the node module cache
-var quotes; 
-var req;
-var res;
 
-// setup and teardown
-beforeEach(function() {
-    req = {};
-    res = {
-        resData: {
-                     status: 0,
-    response: ''
-                 },
-    status: function(statusCode) {
-                res.resData.status = statusCode;
-            },
-    send: function(response) {
-              res.resData.response = response;
-          },
-    end: function() { }
+describe("Quotes Controller", function() {
+    var next = function() {
+        console.log('next!');
+    }
+
+    var model = {
+        save: function(badges, err) {
+                  console.log('badges.save from mock!');
+                  next();
+              }
+    }; 
+
+
+    var req = {
+        body: {}
     };
+    var res = {};
 
-    mockery.enable({
-        warnOnReplace: false,
-        warnOnUnregistered: false
+    beforeEach(function() {
+        console.log('in beforeEach!');
+
+        mockery.resetCache();
+        mockery.registerAllowable(model);
+        mockery.enable({ useCleanCache: true });
+        mockery.registerMock('../models/quotes', model);
+        
+        quotes = require('../controllers/quotes');
     });
 
-    console.log('in beforeEach!\n');
-    mockery.resetCache();
-    // the following call breaks stuff, so I don't include it!
-    //expressRouteFake.reset();
+    describe("quotes.save", function() {
 
-    mockery.registerMock('express', expressRouteFake);
-    quotes = require('../controllers/quotes');
-    routes = require('../routes');
-});
+        it("should call next()", function() {
+            var spy = next = sinon.spy();
 
-afterEach(function() {
-    console.log('in afterEach!\n');
-    mockery.deregisterAll();
-    mockery.disable();
-});
+            quotes.save(req, res, next);
+            expect(spy.calledOnce).to.equal(true);
+        });
 
-// Tests
-describe("quotes sanity tests -- ", function() {
-    it ("is a sanity test for the get path", function() {
-        var routeAction = expressRouteFake.getRouteAction('get', '/mypath/myentity');
+        it("should interact with the model", function() {
+            var spy = model.save = sinon.spy();
 
-        routeAction(req, res);
+            quotes.save(req, res, next);
+            expect(spy.calledOnce).to.equal(true);
+        });
 
-        expect(res.resData.status).to.equal(200);
-    });
-
-    it ("is a sanity test for the post quote path", function() {
-        var routeAction = expressRouteFake.getRouteAction('post', '/quote');
-
-        routeAction(req, res);
-
-        expect(res.resData.status).to.equal(200);
     });
 });
 
