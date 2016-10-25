@@ -25,3 +25,7 @@ exports.save = function(quotes, callback) {
     //var quote = quotes.pop();
     // do something with redis; lpush or pubsub or what?
 };
+
+exports.send = function(quotes, callback) {
+    console.log('models.send called!');
+};
