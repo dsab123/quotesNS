@@ -21,11 +21,12 @@ exports.createChannel = function(channel, callback) {
  */
 
 exports.save = function(quotes, callback) {
-    console.log('models.save called!');
     //var quote = quotes.pop();
     // do something with redis; lpush or pubsub or what?
+
+    return callback(null, null);
 };
 
 exports.send = function(quotes, callback) {
-    console.log('models.send called!');
+    return callback(null, null);
 };

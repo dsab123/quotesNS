@@ -7,12 +7,14 @@ var quotes;// = require('../controllers/quotes');
 var underscore = require('underscore');
 var model = require('../models/quotes');
 
-describe("Quotes Controller", function() {
+describe("Quotes Controller: ", function() {
     var next = function() {
     }
 
-/*
-    var model = {
+    // the reason this is commented out is because
+    // this should be called by the code under test, not 
+    // provided by the test framework!
+/*    var model = {
         save: function(badges, err) {
                   next();
               },
@@ -54,13 +56,6 @@ describe("Quotes Controller", function() {
 
     describe("quotes.save", function() {
 
-        it("should call next()", function() {
-            var spy = next = sinon.spy();
-
-            quotes.save(req, res, next);
-            expect(spy.calledOnce).to.equal(true);
-        });
-
         it("should interact with the model", function() {
             var spy = model.save = sinon.spy();
 
@@ -71,17 +66,10 @@ describe("Quotes Controller", function() {
 
     describe("quotes.send", function() {
 
-        it("should call res.json", function() {
-            var spy = res.json = sinon.spy();
-
-            quotes.send(req, res, next);
-            expect(spy.calledOnce).to.equal(true);
-        });
-
         it("should interact with the model", function() {
             var spy = model.send = sinon.spy();
 
-            quotes.send(res, req, next);
+            quotes.send(req, res, next);
             expect(spy.calledOnce).to.equal(true);
         });
     });
