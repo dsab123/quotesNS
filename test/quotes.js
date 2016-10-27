@@ -2,55 +2,66 @@ var sinon = require('sinon');
 var chai = require('chai');
 var expect = chai.expect;
 var mockery = require('mockery');
-var routes = require('../routes');
-var quotes;// = require('../controllers/quotes');
-var underscore = require('underscore');
-var model = require('../models/quotes');
+var quotes;
 
 describe("Quotes Controller: ", function() {
+    // the mock functions
     var next = function() {
+        console.log("in mock next()");
     }
 
-    // the reason this is commented out is because
-    // this should be called by the code under test, not 
-    // provided by the test framework!
-/*    var model = {
+    var model = {
         save: function(badges, err) {
-                  next();
+                  console.log("in mock model.save");
               },
         send: function(badges, err) {
-             
-        }
-    }; 
-*/
+              console.log("in mock model.save");
+          },
+    };
 
     var req = {
         body: {}
     };
+
     var res = {
         resData: {
-            status: 0,
-            response: ''
-        },
+                     status: 0,
+                     response: ''
+                 },
         json: function(statusCode, object) {
-                res.resData.status = statusCode;
-                res.resData.response = object;
+                  res.resData.status = statusCode;
+                  res.resData.response = object;
               }
     };
 
+    var redis = {
+        createClient: function() {
+                          console.log("from mock createClient()");
+                          // don't need to do anything here
+                          return {
+                              on: function(cause, callback) {
+                                      console.log("from mock redis.on");
+                                      // don't need to do anything here
+                                  } 
+                          };
+                      }
+    };
+
     beforeEach(function() {
+        console.log("in beforeEach");
+
+        // mockery settings
         mockery.resetCache();
-        mockery.registerAllowable(model);
-        mockery.registerAllowable(quotes);
-        mockery.registerAllowable(underscore);
         mockery.enable({
-            warnOnReplace: false,
+            warnOnReplace: true,
             warnOnUnregistered: false,
             useCleanCache: true
         });
 
+        // mocks!
         mockery.registerMock('../models/quotes', model);
-        
+
+        // the code under test
         quotes = require('../controllers/quotes');
     });
 
