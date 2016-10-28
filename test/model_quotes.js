@@ -2,21 +2,17 @@ var sinon = require('sinon');
 var chai = require('chai');
 var expect = chai.expect;
 var mockery = require('mockery');
-var quotes;
+var quotes; //controller
 
-describe("Quotes Controller: ", function() {
+describe("Quotes Model: ", function() {
     // the mock functions
-    var next = function() {
-        console.log("in mock next()");
-    }
-
-    var model = {
+    var controller = {
         save: function(badges, err) {
                   console.log("in mock model.save");
               },
         send: function(badges, err) {
               console.log("in mock model.save");
-          },
+          }
     };
 
     var req = {
@@ -35,6 +31,7 @@ describe("Quotes Controller: ", function() {
     };
 
     var redis = {
+        array : {},
         createClient: function() {
                           console.log("from mock createClient()");
                           // don't need to do anything here
@@ -44,45 +41,59 @@ describe("Quotes Controller: ", function() {
                                       // don't need to do anything here
                                   } 
                           };
-                      }
+                      }, 
+
+        lpush : function(channel, quote, callback) {
+            array.push({ channel, quote});
+        }
+
     };
 
     beforeEach(function() {
-        console.log("in beforeEach");
-
         // mockery settings
         mockery.resetCache();
         mockery.enable({
             warnOnReplace: true,
-            warnOnUnregistered: false,
+            warnOnUnregistered: true,
             useCleanCache: true
         });
 
-        // mocks!
-        mockery.registerMock('../models/quotes', model);
+        // mock the model, which the controller interacts with a lot
+        mockery.registerMock('../controllers/quotes', controller);
+        mockery.registerMock('../lib/redis', redis);
 
         // the code under test
-        quotes = require('../controllers/quotes');
+        model = require('../models/quotes');
     });
 
-    describe("quotes.save", function() {
+    describe("model.save", function() {
 
-        it("should interact with the model", function() {
-            var spy = model.save = sinon.spy();
+        it("should push all quotes in array to redis mock", function() {
+           model.save(
+              [{ 
+                "channel": "Delighting In the Trinity", 
+                "type": "book", 
+                "page": 1, 
+                "quote": "Jesus, the Son of God, the firstborn of creation, ..."
+              }],
+             function() {
+                console.log("inside models.save unit test");
+             }); 
 
-            quotes.save(req, res, next);
-            expect(spy.calledOnce).to.equal(true);
+            console.log(redis.array);
+            expect(redis.array.length).to.equal(1);
+        });
+
+        it("should push none of the quotes in the empty array to redis mock", function() {
+        
         });
     });
 
-    describe("quotes.send", function() {
-
-        it("should interact with the model", function() {
-            var spy = model.send = sinon.spy();
-
-            quotes.send(req, res, next);
-            expect(spy.calledOnce).to.equal(true);
+    describe("model.send", function() {
+        /*
+        it("should ", function() {
         });
+        */
     });
 
 });

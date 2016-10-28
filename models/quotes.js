@@ -1,7 +1,5 @@
 var redis = require('../lib/redis');
 
-
-
 /**
  * Create new channel
  * @param {String} channel
@@ -11,7 +9,6 @@ var redis = require('../lib/redis');
 exports.createChannel = function(channel, callback) {
     // is this possible?
 };
-
 
 /**
  * Save quotes to database
@@ -38,6 +35,7 @@ exports.save = function(quotes, callback) {
     return callback(null, null);
 };
 
+// not implemented yet
 exports.send = function(quotes, callback) {
     return callback(null, null);
 };
