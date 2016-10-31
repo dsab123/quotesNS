@@ -35,6 +35,18 @@ exports.save = function(quotes, callback) {
     return callback(null, null);
 };
 
+
+/**
+ * Validates that the model has the correct properties
+ * @param {Object} quote
+ */
+validate = function(quote) {
+
+    // if it doesn't have channel, page, type, quote then its not valid; return bool
+};
+
+
+
 // not implemented yet
 exports.send = function(quotes, callback) {
     return callback(null, null);
