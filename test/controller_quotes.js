@@ -63,6 +63,11 @@ describe("Quotes Controller: ", function() {
         quotes = require('../controllers/quotes');
     });
 
+    afterEach(function() {
+        mockery.deregisterAll();
+    });
+
+
     describe("quotes.save", function() {
 
         it("should interact with the model", function() {
