@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "express-route-fake": "^0.2.1",
+    "node-schedule": "^1.2.0",
     "nodemon": "^1.11.0",
     "sinon": "^1.17.6"
   }

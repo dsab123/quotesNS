@@ -70,7 +70,7 @@ describe("Quotes Controller: ", function() {
 
     describe("quotes.save", function() {
 
-        it("should interact with the model", function() {
+        it("should call model.save", function() {
             var spy = model.save = sinon.spy();
 
             quotes.save(req, res, next);
@@ -80,7 +80,7 @@ describe("Quotes Controller: ", function() {
 
     describe("quotes.send", function() {
 
-        it("should interact with the model", function() {
+        it("should call model.send", function() {
             var spy = model.send = sinon.spy();
 
             quotes.send(req, res, next);

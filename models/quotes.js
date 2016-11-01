@@ -1,4 +1,5 @@
 var redis = require('../lib/redis');
+var schedule = require('node-schedule');
 
 /**
  * Create new channel
@@ -56,8 +57,19 @@ exports.validate = function(quote) {
 };
 
 
-
-// not implemented yet
+/**
+ * For now, this just schedules the message to be logged out on 
+ * the console every minute. I have big things planned for this
+ * method, big things!
+ * @param {Array}
+ */
 exports.send = function(quotes, callback) {
-    return callback(null, null);
+    quotes.forEach(function(quote) {
+        schedule.scheduleJob('*/1 * * * *', function() {
+            console.log('quote: ' + quote.quote);
+        });
+    });
+
+    console.log('this has been scheduled for 1 minute');
+    callback(null, null);
 };

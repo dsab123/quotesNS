@@ -6,19 +6,19 @@ var model = require('../models/quotes');
 exports.save = function(req, res, next) {
     var quotes = _.clone(req.body);
     model.save(quotes, function(err) {
-        
+
         next();
-        
+
     });
 
 
 };  
 
 exports.send = function(req, res, next) {
+    var quotes = _.clone(req.body);
 
-    // do something with pushing the quote someewhere?
-    // this will happen AFTER a scheduled delay, though...
-    model.send('', function(err) {
-        res.json(200, { error: null });
+    model.send(quotes, function(err) {
+        if (err) return res.json(500, { error: true });
+        res.json(200, { job: 'scheduled!' });
     });
 };

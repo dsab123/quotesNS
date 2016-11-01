@@ -31,11 +31,11 @@ describe("Quotes Model: ", function() {
     // the mock functions
     var controller = {
         save: function(badges, err) {
-                  console.log("in mock model.save");
-              },
-    send: function(badges, err) {
-              console.log("in mock model.save");
-          }
+            console.log("in mock model.save");
+        },
+        send: function(badges, err) {
+            console.log("in mock model.save");
+        }
     };
 
     var req = {
@@ -44,13 +44,13 @@ describe("Quotes Model: ", function() {
 
     var res = {
         resData: {
-                     status: 0,
-    response: ''
-                 },
-    json: function(statusCode, object) {
-              res.resData.status = statusCode;
-              res.resData.response = object;
-          }
+            status: 0,
+            response: ''
+        },
+        json: function(statusCode, object) {
+            res.resData.status = statusCode;
+            res.resData.response = object;
+        }
     };
 
     var redis = {
@@ -60,16 +60,24 @@ describe("Quotes Model: ", function() {
             // don't need to do anything here
             return {
                 on: function(cause, callback) {
-                        console.log("from mock redis.on");
-                        // don't need to do anything here
-                    } 
+                    console.log("from mock redis.on");
+                    // don't need to do anything here
+                } 
             };
         }, 
 
         lpush : function(channel, quote, callback) {
-                    this.fake_array.push({ channel, quote});
-                }
+            this.fake_array.push({ channel, quote});
+        }
     };
+
+    var schedule = {
+        cron_string: '',
+        scheduleJob: function(schedule, callback) {
+            this.cron_string = schedule;
+        }
+    };
+    
 
     beforeEach(function() {
         // mockery settings
@@ -82,7 +90,7 @@ describe("Quotes Model: ", function() {
 
         // mock the model, which the controller interacts with a lot
         mockery.registerMock('../lib/redis', redis);
-        //mockery.registerMock('../controllers/quotes', controller);
+        mockery.registerMock('node-schedule', schedule);
 
         // the code under test
         model = require('../models/quotes');
@@ -106,12 +114,12 @@ describe("Quotes Model: ", function() {
                 if (quotes_array.length == 0)
                     return;            
 
-            model.save(quotes_array, callback);
-        };
+                model.save(quotes_array, callback);
+            };
 
-        model.save(quotes_array, callback); 
+            model.save(quotes_array, callback); 
 
-        expect(redis.fake_array.length).to.equal(4);
+            expect(redis.fake_array.length).to.equal(4);
         });
 
         it("should NOT push anything to redis mock", function() {
@@ -123,21 +131,14 @@ describe("Quotes Model: ", function() {
                     //console.log("inside models.save unit test");
                 }); 
 
-            expect(spy.calledOnce).to.equal(false); 
+                expect(spy.calledOnce).to.equal(false); 
         });
     });
-
-    describe("model.send", function() {
-        /*
-           it("should ", function() {
-           });
-           */
-    });
-
+    
     describe("model.validate", function() {
         it("should return true for this valid quote object", function() {
             var valid_quote = getValidQuote(); 
-            
+
             expect(model.validate(valid_quote)).to.equal(true);
         });
 
@@ -146,7 +147,7 @@ describe("Quotes Model: ", function() {
 
             expect(model.validate(invalid_quote)).to.equal(false);
         });
-        
+
         it("should return false for this null quote object", function() {
             var null_quote = null;
 
@@ -154,5 +155,16 @@ describe("Quotes Model: ", function() {
         });
     });
 
+    describe("model.send", function() {
+        
+        it("should verify that an event was scheduled", function() {
+            model.send([getValidQuote(), getValidQuote()], function() {
+                console.log('from passed-in function in unit test');
+            });
+        
+            // mock the scheduler and check calledOnce
+        });
+        
+    });
 });
 
