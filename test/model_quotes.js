@@ -4,13 +4,36 @@ var expect = chai.expect;
 var mockery = require('mockery');
 var quotes; //controller
 
+// factory methods for easy testing and less brittle tests
+function getValidQuote() {
+    var quote = new Object(); 
+
+    quote.channel = "Delighting In the Trinity4",
+    quote.type = "book",
+    quote.page = 1000,
+    quote.quote = "Jesus, the Son of God, the firstborn of creation, ..."
+
+    return quote;
+};
+
+function getInvalidQuote() {
+    var quote = new Object(); 
+
+    quote.channel = "Delighting In the Trinity4",
+    quote.type = "book",
+    quote.quote = "Jesus, the Son of God, the firstborn of creation, ..."
+
+    return quote;
+};
+
+// Tests
 describe("Quotes Model: ", function() {
     // the mock functions
     var controller = {
         save: function(badges, err) {
                   console.log("in mock model.save");
               },
-        send: function(badges, err) {
+    send: function(badges, err) {
               console.log("in mock model.save");
           }
     };
@@ -22,30 +45,30 @@ describe("Quotes Model: ", function() {
     var res = {
         resData: {
                      status: 0,
-                     response: ''
+    response: ''
                  },
-        json: function(statusCode, object) {
-                  res.resData.status = statusCode;
-                  res.resData.response = object;
-              }
+    json: function(statusCode, object) {
+              res.resData.status = statusCode;
+              res.resData.response = object;
+          }
     };
 
     var redis = {
         fake_array : [],
         createClient: function() {
-                          console.log("from mock createClient()");
-                          // don't need to do anything here
-                          return {
-                              on: function(cause, callback) {
-                                      console.log("from mock redis.on");
-                                      // don't need to do anything here
-                                  } 
-                          };
-                      }, 
+            console.log("from mock createClient()");
+            // don't need to do anything here
+            return {
+                on: function(cause, callback) {
+                        console.log("from mock redis.on");
+                        // don't need to do anything here
+                    } 
+            };
+        }, 
 
         lpush : function(channel, quote, callback) {
-           this.fake_array.push({ channel, quote});
-        }
+                    this.fake_array.push({ channel, quote});
+                }
     };
 
     beforeEach(function() {
@@ -75,33 +98,7 @@ describe("Quotes Model: ", function() {
     describe("model.save", function() {
 
         it("should push all quotes in array to redis mock", function() {
-            var quotes_array =              
-            [
-                {
-                    "channel": "Delighting In the Trinity",
-                    "type": "book",
-                    "page": 1,
-                    "quote": "Jesus, the Son of God, the firstborn of creation, ..."
-                },
-                {  
-                    "channel": "Delighting In the Trinity2",
-                    "type": "book",
-                    "page": 10,
-                    "quote": "Jesus, the Son of God, the firstborn of creation, ..."
-                },
-                {
-                    "channel": "Delighting In the Trinity3",
-                    "type": "book",
-                    "page": 100,
-                    "quote": "Jesus, the Son of God, the firstborn of creation, ..."
-                 },
-                 {
-                    "channel": "Delighting In the Trinity4",
-                    "type": "book",
-                    "page": 1000,
-                    "quote": "Jesus, the Son of God, the firstborn of creation, ..."
-                 }
-            ];
+            var quotes_array = [getValidQuote(), getValidQuote(), getValidQuote(), getValidQuote()];
 
             // not sure if I should be mocking like this...
             var callback = function(err) {
@@ -109,32 +106,52 @@ describe("Quotes Model: ", function() {
                 if (quotes_array.length == 0)
                     return;            
 
-                model.save(quotes_array, callback);
-            };
+            model.save(quotes_array, callback);
+        };
 
-            model.save(quotes_array, callback); 
+        model.save(quotes_array, callback); 
 
-            expect(redis.fake_array.length).to.equal(4);
+        expect(redis.fake_array.length).to.equal(4);
         });
 
         it("should NOT push anything to redis mock", function() {
             var spy = redis.lpush = sinon.spy(); 
 
             model.save(
-             [],
-             function() {
-                //console.log("inside models.save unit test");
-             }); 
-          
+                [],
+                function() {
+                    //console.log("inside models.save unit test");
+                }); 
+
             expect(spy.calledOnce).to.equal(false); 
         });
     });
 
     describe("model.send", function() {
         /*
-        it("should ", function() {
+           it("should ", function() {
+           });
+           */
+    });
+
+    describe("model.validate", function() {
+        it("should return true for this valid quote object", function() {
+            var valid_quote = getValidQuote(); 
+            
+            expect(model.validate(valid_quote)).to.equal(true);
         });
-        */
+
+        it("should return false for this invalid quote object", function() {
+            var invalid_quote = getInvalidQuote();
+
+            expect(model.validate(invalid_quote)).to.equal(false);
+        });
+        
+        it("should return false for this null quote object", function() {
+            var null_quote = null;
+
+            expect(model.validate(null_quote)).to.equal(false);
+        });
     });
 
 });

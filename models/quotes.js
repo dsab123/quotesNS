@@ -25,8 +25,9 @@ exports.save = function(quotes, callback) {
     var quote = quotes.pop();
 
     // this is where I'd do some sort of validation
-    //validate(quote);
-    
+    this.validate(quote);
+   
+
     redis.lpush(quote.channel, quote.quote, function(err) {
         if (err) return callback(err, null);
         exports.save(quotes, callback);
@@ -40,9 +41,18 @@ exports.save = function(quotes, callback) {
  * Validates that the model has the correct properties
  * @param {Object} quote
  */
-validate = function(quote) {
+exports.validate = function(quote) {
+    if (quote == null)
+        return false;
 
-    // if it doesn't have channel, page, type, quote then its not valid; return bool
+    // if it doesn't have channel, page, type, quote then its not valid
+    if (quote.channel != null && 
+        quote.page != null && 
+        quote.type != null && 
+        quote.quote != null)
+        return true;
+    else
+        return false;
 };
 
 
