@@ -28,7 +28,8 @@ exports.save = function(quotes, callback) {
     // this is where I'd do some sort of validation
     this.validate(quote);
    
-
+    // what do I do if the channel doesn't exist?
+    // call channel.createChannel, right?
     redis.lpush(quote.channel, quote.quote, function(err) {
         if (err) return callback(err, null);
         exports.save(quotes, callback);
