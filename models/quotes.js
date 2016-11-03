@@ -63,7 +63,7 @@ exports.validate = function(quote) {
  * method, big things!
  * @param {Array}
  */
-exports.send = function(quotes, callback) {
+exports.schedule = function(quotes, callback) {
     quotes.forEach(function(quote) {
         schedule.scheduleJob('*/1 * * * *', function() {
             console.log('quote: ' + quote.quote);

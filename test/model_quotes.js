@@ -33,7 +33,7 @@ describe("Quotes Model: ", function() {
         save: function(badges, err) {
             console.log("in mock model.save");
         },
-        send: function(badges, err) {
+        schedule: function(badges, err) {
             console.log("in mock model.save");
         }
     };
@@ -155,10 +155,10 @@ describe("Quotes Model: ", function() {
         });
     });
 
-    describe("model.send", function() {
+    describe("model.schedule", function() {
         
         it("should verify that an event was scheduled", function() {
-            model.send([getValidQuote(), getValidQuote()], function() {
+            model.schedule([getValidQuote(), getValidQuote()], function() {
                 console.log('from passed-in function in unit test');
             });
         

@@ -2,7 +2,6 @@
     
 var router = require('express').Router();
 var quotes = require('./controllers/quotes');
-var winston = require('./lib/winston');
 
 router.get('/mypath/myentity', function(req, res) {
 	res.status(200);

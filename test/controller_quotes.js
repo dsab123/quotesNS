@@ -14,7 +14,7 @@ describe("Quotes Controller: ", function() {
         save: function(badges, err) {
                   console.log("in mock model.save");
               },
-        send: function(badges, err) {
+        schedule: function(badges, err) {
               console.log("in mock model.save");
           },
     };
@@ -78,12 +78,12 @@ describe("Quotes Controller: ", function() {
         });
     });
 
-    describe("quotes.send", function() {
+    describe("quotes.schedule", function() {
 
-        it("should call model.send", function() {
-            var spy = model.send = sinon.spy();
+        it("should call model.schedule", function() {
+            var spy = model.schedule = sinon.spy();
 
-            quotes.send(req, res, next);
+            quotes.schedule(req, res, next);
             expect(spy.calledOnce).to.equal(true);
         });
     });

@@ -14,10 +14,10 @@ exports.save = function(req, res, next) {
 
 };  
 
-exports.send = function(req, res, next) {
+exports.schedule = function(req, res, next) {
     var quotes = _.clone(req.body);
 
-    model.send(quotes, function(err) {
+    model.schedule(quotes, function(err) {
         if (err) return res.json(500, { error: true });
         res.json(200, { job: 'scheduled!' });
     });
