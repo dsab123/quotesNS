@@ -61,6 +61,10 @@ describe("Quotes Controller: ", function() {
         // mock the model, which the controller interacts with a lot
         mockery.registerMock('../models/quotes', model);
 
+        // register the allowables
+        mockery.registerAllowables(['underscore']);
+        mockery.registerAllowable('../controllers/quotes');
+
         // the code under test
         quotes = require('../controllers/quotes');
     });

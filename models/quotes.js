@@ -71,6 +71,6 @@ exports.schedule = function(quotes, callback) {
         });
     });
 
-    console.log('this has been scheduled for 1 minute');
+//    console.log('this has been scheduled for 1 minute');
     callback(null, null);
 };

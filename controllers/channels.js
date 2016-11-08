@@ -7,8 +7,13 @@ var model = require('../models/channels');
  */
 exports.create = function(req, res, next) {
     var channel = _.clone(req.body);
+
     model.create(channel, function(err) {
-        next();
+        console.log('in real callback from model');
+        if (err)
+            return res.json(201, { error: "channel already exists!"});
+        else
+            return res.json(200, { error: "channel created!"});
     });
 };
 

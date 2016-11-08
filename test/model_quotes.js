@@ -92,6 +92,10 @@ describe("Quotes Model: ", function() {
         mockery.registerMock('../lib/redis', redis);
         mockery.registerMock('node-schedule', schedule);
 
+        // register allowed modules
+        mockery.registerAllowables(['underscore']);
+        mockery.registerAllowable('../models/quotes');
+
         // the code under test
         model = require('../models/quotes');
     });
@@ -159,7 +163,7 @@ describe("Quotes Model: ", function() {
         
         it("should verify that an event was scheduled", function() {
             model.schedule([getValidQuote(), getValidQuote()], function() {
-                console.log('from passed-in function in unit test');
+                //console.log('from passed-in function in unit test');
             });
         
             // mock the scheduler and check calledOnce
