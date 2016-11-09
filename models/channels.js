@@ -11,13 +11,19 @@ exports.create = function(channel, callback) {
 
     // check if channel exists
     redis.exists(channel, function(err, reply) {
+
+        console.log('reply from redis is: ' + reply);
+
         if (reply == 1) { 
             // if channel already exists
-            return callback(null, 201);
+            return callback(400);
         } else {
             // create the channel
             redis.lpush(channel, '', function(err) {
-                console.log('there was an error!: ' + err);
+                if (errr)
+                    console.log('there was an error!: ' + err);
+                
+                return callback(null);
             });
         }
     });
@@ -25,7 +31,7 @@ exports.create = function(channel, callback) {
 
 
 exports.validate = function(channel) {
-    if (channel == null)
+    if (channel == null && channel == '')
         return false;
 
     // I guess I have no other restrictions on channel names..

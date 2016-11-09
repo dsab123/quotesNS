@@ -7,14 +7,20 @@ var model = require('../models/channels');
  */
 exports.create = function(req, res, next) {
     var channel = _.clone(req.body);
+
+    var channelName = channel.channel;
+
+    console.log('channel is: ' + channelName);
     
-    console.log('channel is: ' + channel);
-    
-    model.create(channel, function(err) {
-        if (err)
-            return res.json(201, { error: "channel already exists!"});
-        else
-            return res.json(200, { error: "channel created!"});
+    model.create(channelName, function(err) {
+
+        console.log('err from model is: ' + err);
+
+        if (err) {
+            console.log('before returning json');
+            return res.json(err, { msg: "channel already exists!"});
+        } else
+            return res.json(200, { msg: "channel created!"});
     });
 };
 

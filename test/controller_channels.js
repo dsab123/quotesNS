@@ -10,15 +10,16 @@ var model;
 var channels;
 
 describe("Channels Controller: ", function() {
-    var channel_already_created = 'channel_already_created';
-    var new_channel = 'new_channel';
-
     var req_channel_already_created = {
-        body: channel_already_created
+        body: {
+        channel:'channel_already_created'
+        }
     };
 
     var req_new_channel = {
-        body: new_channel
+        body: {
+        channel:'new_channel'
+        }
     };
 
     var res = {
@@ -35,10 +36,16 @@ describe("Channels Controller: ", function() {
 
     var model = {
         create: function(channel, callback) {
-            if (channel == channel_already_created)
-                return callback('error', 201);
-            else if (channel == new_channel)
-                return callback(null, 200);
+            var channelName = channel.body;
+            console.log('in mock model.create, channel is: ' + channel);
+
+            if (channel == 'channel_already_created') {
+                console.log('setting it to 201');
+                return callback(400);
+            } else if (channel == 'new_channel') {
+                console.log('setting it to 200');
+                return callback(null);
+            }
         }   
     };
 
@@ -81,7 +88,7 @@ describe("Channels Controller: ", function() {
 
         it("should return 201 status code if the channel is already created", function() {
             channels.create(req_channel_already_created, res, next);           
-            expect(res.statusCode).to.equal(201);
+            expect(res.statusCode).to.equal(400);
         });
 
         it("should return 200 status code if channel is created successfully", function() {
