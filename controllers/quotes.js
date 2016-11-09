@@ -9,10 +9,7 @@ exports.save = function(req, res, next) {
 
         // TODO: I need to check the return value and return a good response code
         next();
-
     });
-
-
 };  
 
 exports.schedule = function(req, res, next) {
@@ -23,3 +20,5 @@ exports.schedule = function(req, res, next) {
         res.json(200, { job: 'scheduled!' });
     });
 };
+
+

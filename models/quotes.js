@@ -23,10 +23,12 @@ exports.save = function(quotes, callback) {
     
     // do something with redis; lpush or pubsub or what?
     // each quote should have the channel name embedded in it
+
+    // need to make sure this is an array
     var quote = quotes.pop();
 
     // this is where I'd do some sort of validation
-    this.validate(quote);
+    var ret = this.validate(quote);
    
     // what do I do if the channel doesn't exist?
     // call channel.createChannel, right?

@@ -25,7 +25,6 @@ describe("Channels Controller: ", function() {
         statusCode: 0,
 
         json: function(status, obj) {
-            console.log('json function called; status: ' + status);
             this.statusCode = status;
         }
     };
@@ -36,8 +35,6 @@ describe("Channels Controller: ", function() {
 
     var model = {
         create: function(channel, callback) {
-
-            console.log('channel is: ' + channel);
             if (channel == channel_already_created)
                 return callback('error', 201);
             else if (channel == new_channel)
