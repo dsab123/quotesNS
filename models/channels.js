@@ -20,7 +20,7 @@ exports.create = function(channel, callback) {
         } else {
             // create the channel
             redis.lpush(channel, '', function(err) {
-                if (errr)
+                if (err)
                     console.log('there was an error!: ' + err);
                 
                 return callback(null);

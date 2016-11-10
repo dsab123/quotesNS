@@ -1,5 +1,6 @@
 var redis = require('../lib/redis');
 var schedule = require('node-schedule');
+var _ = require('underscore');
 
 /**
  * Create new channel
@@ -25,6 +26,11 @@ exports.save = function(quotes, callback) {
     // each quote should have the channel name embedded in it
 
     // need to make sure this is an array
+    if (!_.isArray(quotes)) {
+        console.log('not array!');
+        return callback(400, {error: "request body must be array"});
+    }
+
     var quote = quotes.pop();
 
     // this is where I'd do some sort of validation

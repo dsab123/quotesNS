@@ -16,8 +16,8 @@ exports.schedule = function(req, res, next) {
     var quotes = _.clone(req.body);
 
     model.schedule(quotes, function(err) {
-        if (err) return res.json(500, { error: true });
-        res.json(200, { job: 'scheduled!' });
+        if (err) return res.status(500).json({ error: true });
+        res.status(200).json({ job: 'scheduled!' });
     });
 };
 

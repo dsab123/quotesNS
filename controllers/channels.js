@@ -18,9 +18,9 @@ exports.create = function(req, res, next) {
 
         if (err) {
             console.log('before returning json');
-            return res.json(err, { msg: "channel already exists!"});
+            return res.status(err).json({ msg: "channel already exists!"});
         } else
-            return res.json(200, { msg: "channel created!"});
+            return res.status(200).json({ msg: "channel created!"});
     });
 };
 
