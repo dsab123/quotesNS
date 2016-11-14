@@ -10,17 +10,14 @@ exports.create = function(req, res, next) {
 
     var channelName = channel.channel;
 
-    console.log('channel is: ' + channelName);
-    
     model.create(channelName, function(err) {
 
-        console.log('err from model is: ' + err);
-
         if (err) {
-            console.log('before returning json');
-            return res.status(err).json({ msg: "channel already exists!"});
+            return res.json(err, {msg: "channel created!"});
+            //return res.status(err).json({ msg: "channel already exists!"});
         } else
-            return res.status(200).json({ msg: "channel created!"});
+            return res.json(200, {msg: "channel created!"});
+            //return res.status(200).json({ msg: "channel created!"});
     });
 };
 

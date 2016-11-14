@@ -22,9 +22,6 @@ exports.createChannel = function(channel, callback) {
 exports.save = function(quotes, callback) {
     if (quotes.length == 0) return callback(null, null);
     
-    // do something with redis; lpush or pubsub or what?
-    // each quote should have the channel name embedded in it
-
     // need to make sure this is an array
     if (!_.isArray(quotes)) {
         console.log('not array!');
@@ -35,8 +32,11 @@ exports.save = function(quotes, callback) {
 
     // this is where I'd do some sort of validation
     var ret = this.validate(quote);
-   
-    // what do I do if the channel doesn't exist?
+
+    // TODO: what do I do if the channel doesn't exist?
+
+    // TODO: need to check if the quote already exists
+
     // call channel.createChannel, right?
     redis.lpush(quote.channel, quote.quote, function(err) {
         if (err) return callback(err, null);

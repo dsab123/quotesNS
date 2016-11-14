@@ -16,7 +16,7 @@ exports.create = function(channel, callback) {
 
         if (reply == 1) { 
             // if channel already exists
-            return callback(400);
+            return callback(409);
         } else {
             // create the channel
             redis.lpush(channel, '', function(err) {

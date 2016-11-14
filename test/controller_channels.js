@@ -37,13 +37,10 @@ describe("Channels Controller: ", function() {
     var model = {
         create: function(channel, callback) {
             var channelName = channel.body;
-            console.log('in mock model.create, channel is: ' + channel);
 
             if (channel == 'channel_already_created') {
-                console.log('setting it to 201');
-                return callback(400);
+                return callback(409);
             } else if (channel == 'new_channel') {
-                console.log('setting it to 200');
                 return callback(null);
             }
         }   
@@ -86,9 +83,9 @@ describe("Channels Controller: ", function() {
 //            expect(spy.calledOnce).to.equal(true);
         });
 
-        it("should return 201 status code if the channel is already created", function() {
+        it("should return 409 status code if the channel is already created", function() {
             channels.create(req_channel_already_created, res, next);           
-            expect(res.statusCode).to.equal(400);
+            expect(res.statusCode).to.equal(409);
         });
 
         it("should return 200 status code if channel is created successfully", function() {
