@@ -16,7 +16,8 @@ exports.create = function(channel, callback) {
 
         if (reply == 1) { 
             // if channel already exists
-            return callback(409);
+            // not sure about creating the error object here...
+            return callback({status: 409, msg: "the channel already exists!"});
         } else {
             // create the channel
             redis.lpush(channel, '', function(err) {

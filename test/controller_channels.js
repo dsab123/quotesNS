@@ -39,7 +39,7 @@ describe("Channels Controller: ", function() {
             var channelName = channel.body;
 
             if (channel == 'channel_already_created') {
-                return callback(409);
+                return callback({status: 409, msg: "the channel already exists!"});
             } else if (channel == 'new_channel') {
                 return callback(null);
             }

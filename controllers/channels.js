@@ -13,7 +13,7 @@ exports.create = function(req, res, next) {
     model.create(channelName, function(err) {
 
         if (err) {
-            return res.json(err, {msg: "channel created!"});
+            return res.json(err.status, err);
             //return res.status(err).json({ msg: "channel already exists!"});
         } else
             return res.json(200, {msg: "channel created!"});
