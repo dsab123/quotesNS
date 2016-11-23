@@ -5,10 +5,6 @@ var schedule = require('node-schedule');
 // 'key'
 
 exports.create = function(channel, callback) {
-    // validate channel name
-    //  what kind of restrictions?
-    var sanitizedChannel = this.validate(channel);
-
     // check if channel exists
     redis.exists(channel, function(err, reply) {
 
@@ -28,13 +24,4 @@ exports.create = function(channel, callback) {
             });
         }
     });
-};
-
-
-exports.validate = function(channel) {
-    if (channel == null && channel == '')
-        return false;
-
-    // I guess I have no other restrictions on channel names..
-    return true;
 };

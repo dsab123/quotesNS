@@ -10,17 +10,37 @@ exports.create = function(req, res, next) {
 
     var channelName = channel.channel;
 
+    // validate that the channel is well-formed
+    if (exports.validateChannel(channel) == false)  
+        return res.json(400, {msg: "channel not in valid format!"});
+
     model.create(channelName, function(err) {
 
         if (err) {
             return res.json(err.status, err);
-            //return res.status(err).json({ msg: "channel already exists!"});
         } else
             return res.json(200, {msg: "channel created!"});
-            //return res.status(200).json({ msg: "channel created!"});
     });
 };
 
+
+
+/** validates that the channel is well-formed
+ */
+exports.validateChannel = function(channel) {
+    if (channel.channel == null && channel.channel == '')
+        return false;
+
+    // only requirement for validation: if the type is a book, it must have an author
+    if (channel.type == 'book') {
+        if (channel.author == null) 
+            return false;
+        else
+            return true;
+    }
+    
+    return true;
+};
 
 /** edits the channel (not sure how yet)  
  */

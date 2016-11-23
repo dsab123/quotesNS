@@ -12,14 +12,26 @@ var channels;
 describe("Channels Controller: ", function() {
     var req_channel_already_created = {
         body: {
-        channel:'channel_already_created'
+            channel:'channel_already_created'
         }
     };
 
     var req_new_channel = {
         body: {
-        channel:'new_channel'
+            channel:'new_channel'
         }
+    };
+
+    // these aren't requests, just channel objects
+    var new_valid_book_channel = {
+            channel:'new_channel',
+            type: 'book',
+            author: 'fake name'
+    };
+
+    var new_invalid_book_channel = {
+            channel:'new_channel',
+            type: 'book'
     };
 
     var res = {
@@ -92,6 +104,14 @@ describe("Channels Controller: ", function() {
             channels.create(req_new_channel, res, next);           
             expect(res.statusCode).to.equal(200);
         });
-    });
+
+        it("should pass validation that a 'book' channel has an author", function() {
+            expect(channels.validateChannel(new_valid_book_channel)).to.equal(true);
+        });
+
+        it("should fail validation that a 'book' channel doesn't has an author", function() {
+            expect(channels.validateChannel(new_invalid_book_channel)).to.equal(false);
+        });
+});
 
 });
