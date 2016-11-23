@@ -94,7 +94,7 @@ describe("Quotes Model: ", function() {
     function getValidQuote() {
         var quote = new Object(); 
 
-        quote.channel = "Delighting In the Trinity4",
+        quote.channel = "Delighting In the Trinity",
         quote.type = "book",
         quote.page = page,
         quote.quote = "Jesus, the Son of God, the firstborn of creation, ..."
@@ -108,9 +108,7 @@ describe("Quotes Model: ", function() {
     function getInvalidQuote() {
         var quote = new Object(); 
 
-        quote.channel = "Delighting In the Trinity4",
-        quote.type = "book",
-        quote.quote = "Jesus, the Son of God, the firstborn of creation, ..."
+        quote.channel = "Delighting In the Trinity";
 
         return quote;
     };

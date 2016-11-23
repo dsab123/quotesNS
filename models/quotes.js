@@ -57,8 +57,10 @@ exports.validate = function(quote) {
 
     // if it doesn't have channel, page, type, quote then its not valid
     if (quote.channel != null && 
-        quote.page != null && 
-        quote.type != null && 
+// these following properties of the quote only apply to the 'book' channel type, thus
+// not necessary
+//        quote.page != null && 
+//        quote.type != null && 
         quote.quote != null)
         return true;
     else
