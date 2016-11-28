@@ -29,6 +29,7 @@ describe("Quotes Model: ", function() {
         return quote;
     };
 
+    // has no actual quote
     function getInvalidQuote() {
         var quote = new Object(); 
 
@@ -44,11 +45,11 @@ describe("Quotes Model: ", function() {
 
         // the mock functions
         controller = {
-            save: function(badges, err) {
-                console.log("in mock model.save");
+            create: function(badges, err) {
+                console.log("in mock model.create");
             },
             schedule: function(badges, err) {
-                console.log("in mock model.save");
+                console.log("in mock model.create");
             }
         };
 
@@ -115,7 +116,7 @@ describe("Quotes Model: ", function() {
     });
 
 
-    describe("model.save", function() {
+    describe("model.create", function() {
 
         it("should push all quotes in array to redis mock", function() {
             var quotes_array = [getValidQuote(), getValidQuote(), getValidQuote(), getValidQuote()];
@@ -126,21 +127,21 @@ describe("Quotes Model: ", function() {
                 if (quotes_array.length == 0)
                     return;            
 
-                model.save(quotes_array, callback);
+                model.create(quotes_array, callback);
             };
 
-            model.save(quotes_array, callback); 
+            model.create(quotes_array, callback); 
 
             expect(redis.fake_array.length).to.equal(4);
         });
 
-        it("should NOT push anything to redis mock", function() {
+        it("should NOT push elements from an empty array to redis mock", function() {
             var spy = redis.lpush = sinon.spy(); 
 
-            model.save(
+            model.create(
                 [],
                 function() {
-                    //console.log("inside models.save unit test");
+                    //console.log("inside models.create unit test");
                 }); 
 
                 expect(spy.calledOnce).to.equal(false); 
@@ -152,10 +153,10 @@ describe("Quotes Model: ", function() {
             var spy = redis.lpush = sinon.spy();
             var quote = getValidQuote();
 
-            model.save([quote], function(err) {
+            model.create([quote], function(err) {
             });
 
-            model.save([quote], function(err, data) {
+            model.create([quote], function(err, data) {
                 console.log('return value: ' + data);
             });
 
@@ -173,13 +174,13 @@ describe("Quotes Model: ", function() {
             expect(model.validate(valid_quote)).to.equal(true);
         });
 
-        it("should return false for this invalid quote object", function() {
+        it("should return false for an invalid quote object", function() {
             var invalid_quote = getInvalidQuote();
 
             expect(model.validate(invalid_quote)).to.equal(false);
         });
 
-        it("should return false for this null quote object", function() {
+        it("should return false for a null quote object", function() {
             var null_quote = null;
 
             expect(model.validate(null_quote)).to.equal(false);

@@ -20,20 +20,22 @@ exports.createChannel = function(channel, callback) {
  *
  */
 
-exports.save = function(quotes, callback) {
+exports.create = function(quotes, callback) {
     if (quotes.length == 0) return callback(null, null);
     
     // need to make sure this is an array
     // what if I just wrap it in an array if its one element?
     if (!_.isArray(quotes)) {
         console.log('not array!');
-        return callback(400, {error: "request body must be array"});
+        return callback({status: 400, error: "request body must be array"});
     }
 
     var quote = quotes.pop();
 
     // this is where I'd do some sort of validation
-    var isValidQuote = this.validate(quote);
+    if (this.validate(quote) == false) {
+        return callback({status: 400, error: "request body is malformed"});
+    }
 
     // TODO: what do I do if the channel doesn't exist?
     // create a new one?
@@ -42,11 +44,11 @@ exports.save = function(quotes, callback) {
 
     // call channel.createChannel, right?
     redis.lpush(quote.channel, quote.quote, function(err) {
-        if (err) return callback(err, null);
-        exports.save(quotes, callback);
+        if (err) return callback(err);
+        exports.create(quotes, callback);
     }); 
 
-    return callback(null, null);
+    return callback(null);
 };
 
 

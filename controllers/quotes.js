@@ -3,17 +3,22 @@
 var _ = require('underscore');
 var model = require('../models/quotes');
 
-exports.save = function(req, res, next) {
+exports.create = function(req, res, next) {
+    if (req.body == null || _.isEmpty(req.body)) 
+       return res.status(400).json({status: 400, msg: "req body is empty"}); 
+
     var quotes = _.clone(req.body);
 
     // ensure that quotes is an array, even if only one element
     if (!_.isArray(quotes)) 
         quotes = [quotes];
 
-    model.save(quotes, function(err) {
-        console.log('in REAL model.save');
-
+    model.create(quotes, function(err, data) {
         // TODO: I need to check the return value and return a good response code
+        if (err)  {
+            return res.status(err.status).json(err);
+        }
+
         next();
     });
 };  

@@ -15,7 +15,7 @@ describe("Quotes Controller: ", function() {
         // the mock functions
         model = {
             ret: false,
-            save: function(badges, err) {
+            create: function(badges, err) {
                 if (!_.isArray(badges)) {
                     console.log("badges is not an array");
                     this.ret = false;
@@ -33,14 +33,18 @@ describe("Quotes Controller: ", function() {
         };
 
         res = {
-            resData: {
-                status: 0,
-                response: ''
+            statusCode: 0,
+            errorObject: '',
+
+            status: function(code) {
+                this.statusCode = code;
+                return this;
             },
-            json: function(statusCode, object) {
-                res.resData.status = statusCode;
-                res.resData.response = object;
+
+            json: function(obj) {
+                this.errorObject = obj;
             }
+
         };
 
 
@@ -68,29 +72,42 @@ describe("Quotes Controller: ", function() {
     });
 
 
-    describe("quotes.save", function() {
+    describe("quotes.create", function() {
 
-        it("should call model.save", function() {
-            var spy = model.save = sinon.spy();
+        it("should call model.create", function() {
+            var spy = model.create = sinon.spy();
 
-            quotes.save(req, res, next);
-            expect(spy.calledOnce).to.equal(true);
-        });
-
-        it("should wrap a single quote in an array before sending it to the model", function() {
-            // create a quote, put it in req
-            // call quotes.save on it
-            // verify that the model.save returns true
+            // any vanilla req will work here
             req.body = {
                 channel: "fake channel",
                 quote: "this is a quote"
             };
 
-            quotes.save(req, res, next);
+            quotes.create(req, res, next);
+            expect(spy.calledOnce).to.equal(true);
+        });
+
+        it("should wrap a single quote in an array before sending it to the model", function() {
+            // create a quote, put it in req
+            // call quotes.create on it
+            // verify that the model.create returns true
+            req.body = {
+                channel: "fake channel",
+                quote: "this is a quote"
+            };
+
+            quotes.create(req, res, next);
 
             expect(model.ret).to.equal(true); 
         });
 
+        it("should reject an empty req.body (that is, quote)", function() {
+            var spy = model.create = sinon.spy();
+
+            quotes.create(req, res, next);
+
+            expect(spy.calledOnce).to.equal(false);
+        });
     });
 
     describe("quotes.schedule", function() {
