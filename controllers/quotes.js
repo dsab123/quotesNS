@@ -5,7 +5,13 @@ var model = require('../models/quotes');
 
 exports.save = function(req, res, next) {
     var quotes = _.clone(req.body);
+
+    // ensure that quotes is an array, even if only one element
+    if (!_.isArray(quotes)) 
+        quotes = [quotes];
+
     model.save(quotes, function(err) {
+        console.log('in REAL model.save');
 
         // TODO: I need to check the return value and return a good response code
         next();

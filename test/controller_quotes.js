@@ -4,6 +4,7 @@ var sinon = require('sinon');
 var chai = require('chai');
 var expect = chai.expect;
 var mockery = require('mockery');
+var _ = require('underscore');
 var quotes;
 
 describe("Quotes Controller: ", function() {
@@ -13,12 +14,18 @@ describe("Quotes Controller: ", function() {
     }
 
     var model = {
+        ret: false,
         save: function(badges, err) {
-                  console.log("in mock model.save");
-              },
+            if (!_.isArray(badges)) {
+                console.log("badges is not an array");
+                this.ret = false;
+            }
+
+            this.ret = true;
+        },
         schedule: function(badges, err) {
-              console.log("in mock model.save");
-          },
+            console.log("in mock model.schedule");
+        },
     };
 
     var req = {
@@ -27,29 +34,69 @@ describe("Quotes Controller: ", function() {
 
     var res = {
         resData: {
-                     status: 0,
-                     response: ''
-                 },
+            status: 0,
+            response: ''
+        },
         json: function(statusCode, object) {
-                  res.resData.status = statusCode;
-                  res.resData.response = object;
-              }
+            res.resData.status = statusCode;
+            res.resData.response = object;
+        }
     };
 
+    // this doesn't get used at all -- leaving it in just in case
+    /*
     var redis = {
         createClient: function() {
-                          console.log("from mock createClient()");
-                          // don't need to do anything here
-                          return {
-                              on: function(cause, callback) {
-                                      console.log("from mock redis.on");
-                                      // don't need to do anything here
-                                  } 
-                          };
-                      }
+            console.log("from mock createClient()");
+            // don't need to do anything here
+            return {
+                on: function(cause, callback) {
+                    console.log("from mock redis.on");
+                    // don't need to do anything here
+                } 
+            };
+        }
     };
+    */
 
     beforeEach(function() {
+
+
+
+    model = {
+        ret: false,
+        save: function(badges, err) {
+            console.log("in MOCK model.save");
+
+            if (!_.isArray(badges)) {
+                console.log("badges is not an array");
+                this.ret = false;
+            } else {
+                this.ret = true;
+            }
+        },
+        schedule: function(badges, err) {
+            console.log("in mock model.schedule");
+        },
+    };
+
+    req = {
+        body: {}
+    };
+
+    res = {
+        resData: {
+            status: 0,
+            response: ''
+        },
+        json: function(statusCode, object) {
+            res.resData.status = statusCode;
+            res.resData.response = object;
+        }
+    };
+
+
+
         // mockery settings
         mockery.resetCache();
         mockery.enable({
@@ -82,6 +129,23 @@ describe("Quotes Controller: ", function() {
             quotes.save(req, res, next);
             expect(spy.calledOnce).to.equal(true);
         });
+
+        it("should wrap a single quote in an array before sending it to the model", function() {
+            // create a quote, put it in req
+            // call quotes.save on it
+            // verify that the model.save returns true
+            var quote = {
+                channel: "fake channel",
+                quote: "this is a quote"
+            };
+
+            req.body = quote;
+
+            quotes.save(req, res, next);
+            
+            expect(model.ret).to.equal(true); 
+        });
+
     });
 
     describe("quotes.schedule", function() {

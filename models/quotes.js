@@ -10,6 +10,7 @@ var _ = require('underscore');
 
 exports.createChannel = function(channel, callback) {
     // is this possible?
+    // I think this should just reroute to /channel/create
 };
 
 /**
@@ -23,6 +24,7 @@ exports.save = function(quotes, callback) {
     if (quotes.length == 0) return callback(null, null);
     
     // need to make sure this is an array
+    // what if I just wrap it in an array if its one element?
     if (!_.isArray(quotes)) {
         console.log('not array!');
         return callback(400, {error: "request body must be array"});
@@ -31,11 +33,12 @@ exports.save = function(quotes, callback) {
     var quote = quotes.pop();
 
     // this is where I'd do some sort of validation
-    var ret = this.validate(quote);
+    var isValidQuote = this.validate(quote);
 
     // TODO: what do I do if the channel doesn't exist?
+    // create a new one?
 
-    // TODO: need to check if the quote already exists
+    // TODO: need to check if the quote already exists for this channel
 
     // call channel.createChannel, right?
     redis.lpush(quote.channel, quote.quote, function(err) {
