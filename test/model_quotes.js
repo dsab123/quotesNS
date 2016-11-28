@@ -6,83 +6,7 @@ var quotes; //controller
 
 // Tests
 describe("Quotes Model: ", function() {
-
-    // counter for page number in factory methods (below)
-    var page = 0;
-
-    // the mock functions
-    var controller = {
-        save: function(badges, err) {
-            console.log("in mock model.save");
-        },
-        schedule: function(badges, err) {
-            console.log("in mock model.save");
-        }
-    };
-
-    var req = {
-        body: {}
-    };
-
-    var res = {
-        resData: {
-            status: 0,
-            response: ''
-        },
-        json: function(object) {
-            res.resData.response = object;
-        },
-        status: function(statusCode) {
-            res.resData.status = statusCode;
-        }
-    };
-
-    var redis = {
-        fake_array : [],
-        createClient: function() {
-            console.log("from mock createClient()");
-            // don't need to do anything here
-            return {
-                on: function(cause, callback) {
-                    console.log("from mock redis.on");
-                    // don't need to do anything here
-                } 
-            };
-        }, 
-
-        lpush : function(channel, quote, callback) {
-            this.fake_array.push({ channel, quote});
-        }
-    };
-
-    var schedule = {
-        cron_string: '',
-        scheduleJob: function(schedule, callback) {
-            this.cron_string = schedule;
-        }
-    };
-
-
-    beforeEach(function() {
-        // mockery settings
-        mockery.resetCache();
-        mockery.enable({
-            warnOnReplace: true,
-            warnOnUnregistered: true,
-            useCleanCache: true
-        });
-
-        // mock the model, which the controller interacts with a lot
-        mockery.registerMock('../lib/redis', redis);
-        mockery.registerMock('node-schedule', schedule);
-
-        // register allowed modules
-        mockery.registerAllowables(['underscore']);
-        mockery.registerAllowable('../models/quotes');
-
-        // the code under test
-        model = require('../models/quotes');
-    });
+    var page, controller, req, res, redis, schedule;
 
     afterEach(function() {
         mockery.deregisterAll();
@@ -112,6 +36,84 @@ describe("Quotes Model: ", function() {
 
         return quote;
     };
+
+
+    beforeEach(function() {
+        // counter for page number in factory methods (below)
+        page = 0;
+
+        // the mock functions
+        controller = {
+            save: function(badges, err) {
+                console.log("in mock model.save");
+            },
+            schedule: function(badges, err) {
+                console.log("in mock model.save");
+            }
+        };
+
+        req = {
+            body: {}
+        };
+
+        res = {
+            resData: {
+                status: 0,
+                response: ''
+            },
+            json: function(object) {
+                res.resData.response = object;
+            },
+            status: function(statusCode) {
+                res.resData.status = statusCode;
+            }
+        };
+
+        redis = {
+            fake_array : [],
+            createClient: function() {
+                console.log("from mock createClient()");
+                // don't need to do anything here
+                return {
+                    on: function(cause, callback) {
+                        console.log("from mock redis.on");
+                        // don't need to do anything here
+                    } 
+                };
+            }, 
+
+            lpush : function(channel, quote, callback) {
+                this.fake_array.push({ channel, quote});
+            }
+        };
+
+        schedule = {
+            cron_string: '',
+            scheduleJob: function(schedule, callback) {
+                this.cron_string = schedule;
+            }
+        };
+
+        // mockery settings
+        mockery.resetCache();
+        mockery.enable({
+            warnOnReplace: true,
+            warnOnUnregistered: true,
+            useCleanCache: true
+        });
+
+        // mock the model, which the controller interacts with a lot
+        mockery.registerMock('../lib/redis', redis);
+        mockery.registerMock('node-schedule', schedule);
+
+        // register allowed modules
+        mockery.registerAllowables(['underscore']);
+        mockery.registerAllowable('../models/quotes');
+
+        // the code under test
+        model = require('../models/quotes');
+    });
+
 
     describe("model.save", function() {
 

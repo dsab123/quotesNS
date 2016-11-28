@@ -10,55 +10,57 @@ var model;
 var channels;
 
 describe("Channels Controller: ", function() {
-    var req_channel_already_created = {
-        body: {
-            channel:'channel_already_created'
-        }
-    };
+    var req_channel_already_created, req_new_channel, new_valid_book_channel, new_invalid_book_channel, res, next, model;
 
-    var req_new_channel = {
-        body: {
-            channel:'new_channel'
-        }
-    };
+    beforeEach(function() {
+        req_channel_already_created = {
+            body: {
+                channel:'channel_already_created'
+            }
+        };
 
-    // these aren't requests, just channel objects
-    var new_valid_book_channel = {
+        req_new_channel = {
+            body: {
+                channel:'new_channel'
+            }
+        };
+
+        // these aren't requests, just channel objects
+        new_valid_book_channel = {
             channel:'new_channel',
             type: 'book',
             author: 'fake name'
-    };
+        };
 
-    var new_invalid_book_channel = {
+        new_invalid_book_channel = {
             channel:'new_channel',
             type: 'book'
-    };
+        };
 
-    var res = {
-        statusCode: 0,
+        res = {
+            statusCode: 0,
 
-        json: function(status, obj) {
-            this.statusCode = status;
-        }
-    };
-
-    function next() {
-        console.log('in mock next()');
-    }
-
-    var model = {
-        create: function(channel, callback) {
-            var channelName = channel.body;
-
-            if (channel == 'channel_already_created') {
-                return callback({status: 409, msg: "the channel already exists!"});
-            } else if (channel == 'new_channel') {
-                return callback(null);
+            json: function(status, obj) {
+                this.statusCode = status;
             }
-        }   
-    };
+        };
 
-    beforeEach(function() {
+        next = function() {
+            console.log('in mock next()');
+        }
+
+        model = {
+            create: function(channel, callback) {
+                var channelName = channel.body;
+
+                if (channel == 'channel_already_created') {
+                    return callback({status: 409, msg: "the channel already exists!"});
+                } else if (channel == 'new_channel') {
+                    return callback(null);
+                }
+            }   
+        };
+
         mockery.resetCache();
         mockery.enable({
             warnOnReplace: true,
@@ -87,12 +89,12 @@ describe("Channels Controller: ", function() {
     describe("channels.create", function() {
         // THIS TEST BREAKS THE MODEL MOCK; FIND OUT WHY TODO TOMORROW
         it("should interact with the model", function() {
-//            var spy = model.create = sinon.spy();
+            var spy = model.create = sinon.spy();
 
             // not checking the return value here, just checking on the spy
-//            channels.create(req_new_channel, res, next);
+            channels.create(req_new_channel, res, next);
 
-//            expect(spy.calledOnce).to.equal(true);
+            expect(spy.calledOnce).to.equal(true);
         });
 
         it("should return 409 status code if the channel is already created", function() {
@@ -112,6 +114,6 @@ describe("Channels Controller: ", function() {
         it("should fail validation that a 'book' channel doesn't has an author", function() {
             expect(channels.validateChannel(new_invalid_book_channel)).to.equal(false);
         });
-});
+    });
 
 });
