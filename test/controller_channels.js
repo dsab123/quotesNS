@@ -39,9 +39,15 @@ describe("Channels Controller: ", function() {
 
         res = {
             statusCode: 0,
+            errorObject: '',
+    
+            status: function(code) {
+                this.statusCode = code;
+                return this;
+            },
 
-            json: function(status, obj) {
-                this.statusCode = status;
+            json: function(obj) {
+                this.errorObject = obj;
             }
         };
 

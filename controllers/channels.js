@@ -6,20 +6,22 @@ var model = require('../models/channels');
 /** creates the channel 
  */
 exports.create = function(req, res, next) {
+    if (req.body == null)
+        return res.status(400).json({msg: "req body is empty"});
+
     var channel = _.clone(req.body);
 
     var channelName = channel.channel;
 
     // validate that the channel is well-formed
     if (exports.validateChannel(channel) == false)  
-        return res.json(400, {msg: "channel not in valid format!"});
+        return res.status(400).json({msg: "channel not in valid format!"});
 
     model.create(channelName, function(err) {
-
         if (err) {
-            return res.json(err.status, err);
+            return res.status(err.status).json(err);
         } else
-            return res.json(200, {msg: "channel created!"});
+            return res.status(200).json({msg: "channel created!"});
     });
 };
 
