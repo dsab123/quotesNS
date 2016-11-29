@@ -69,6 +69,8 @@ describe("Quotes Controller: ", function() {
 
     afterEach(function() {
         mockery.deregisterAll();
+
+        model.ret = false;
     });
 
 
