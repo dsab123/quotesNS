@@ -17,7 +17,7 @@ exports.create = function(req, res, next) {
     if (exports.validateChannel(channel) == false)  
         return res.status(400).json({msg: "channel not in valid format!"});
 
-    model.create(channelName, function(err) {
+    model.create(channel, function(err) {
         if (err) {
             return res.status(err.status).json(err);
         } else

@@ -1,12 +1,14 @@
 var redis = require('../lib/redis');
-var schedule = require('node-schedule');
+var uuid = require('node-uuid');
 
 // what I refer to here as a 'channel', redis refers to as a 
 // 'key'
 
 exports.create = function(channel, callback) {
+    var channelName = channel.channel;
+
     // check if channel exists
-    redis.exists(channel, function(err, reply) {
+    redis.exists(channelName, function(err, reply) {
 
         console.log('reply from redis is: ' + reply);
 
@@ -16,13 +18,16 @@ exports.create = function(channel, callback) {
             return callback({status: 409, msg: "the channel already exists!"});
 
         // here is where I'd add the UUID creation
+        channel.uuid = uuid.v4(); 
+
+        console.log('uuid: ' + channel.uuid);
 
         // create the channel
-        redis.lpush(channel, '', function(err) {
+        redis.lpush(channelName, '', function(err) {
             if (err)
                 console.log('there was an error!: ' + err);
 
-            return callback(null);
+            return callback(null, channel.uuid);
         });
     });
 };
