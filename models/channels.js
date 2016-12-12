@@ -10,18 +10,19 @@ exports.create = function(channel, callback) {
 
         console.log('reply from redis is: ' + reply);
 
-        if (reply == 1) { 
-            // if channel already exists
-            // not sure about creating the error object here...
+        // if channel already exists
+        // not sure about creating the error object here...
+        if (reply == 1)  
             return callback({status: 409, msg: "the channel already exists!"});
-        } else {
-            // create the channel
-            redis.lpush(channel, '', function(err) {
-                if (err)
-                    console.log('there was an error!: ' + err);
-                
-                return callback(null);
-            });
-        }
+
+        // here is where I'd add the UUID creation
+
+        // create the channel
+        redis.lpush(channel, '', function(err) {
+            if (err)
+                console.log('there was an error!: ' + err);
+
+            return callback(null);
+        });
     });
 };

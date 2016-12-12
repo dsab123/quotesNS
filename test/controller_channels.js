@@ -120,6 +120,13 @@ describe("Channels Controller: ", function() {
         it("should fail validation that a 'book' channel doesn't has an author", function() {
             expect(channels.validateChannel(new_invalid_book_channel)).to.equal(false);
         });
+
+        it("should ensure that a UID is created for each channel", function() {
+            channels.create(req_new_channel, res, next);
+            console.log(res.uid);
+            expect(res.uid).to.not.equal(undefined);
+        });
+
     });
 
 });
