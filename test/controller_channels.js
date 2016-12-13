@@ -94,7 +94,6 @@ describe("Channels Controller: ", function() {
     });
 
     describe("channels.create", function() {
-        // THIS TEST BREAKS THE MODEL MOCK; FIND OUT WHY TODO TOMORROW
         it("should interact with the model", function() {
             var spy = model.create = sinon.spy();
 
@@ -121,16 +120,5 @@ describe("Channels Controller: ", function() {
         it("should fail validation that a 'book' channel doesn't has an author", function() {
             expect(channels.validateChannel(new_invalid_book_channel)).to.equal(false);
         });
-
-        // I don't think this can be tested like this
-        /*
-        it("should ensure that a UID is created for each channel", function() {
-            channels.create(req_new_channel, res, next);
-            console.log(res.uid);
-            expect(res.uid).to.not.equal(undefined);
-        });
-        */
-
     });
-
 });
