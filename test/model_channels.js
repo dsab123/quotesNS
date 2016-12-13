@@ -38,7 +38,8 @@ describe("Channels Model:", function() {
             },  
 
             lpush : function(channel, quote, callback) {
-                this.fake_array.push({channel: quote});
+                this.fake_array[channel] = quote;
+
 
                 callback(null, uuid.v4());
             },
@@ -82,8 +83,25 @@ describe("Channels Model:", function() {
                 if (err)
                     fail('there was an error returned from model.create');
 
+                // data returned by model.create contains the UUID; not sure which one to check against
                 expect(channel.uuid).to.not.equal(undefined);
             });
+        });
+
+        it("should reject duplicate channel creations with a 409 status code", function() {
+            var channel = getValidChannel();
+
+            model.create(channel, function(err, data) {
+                // don't do anything
+            });
+
+            model.create(channel, function(err, data) {
+                if (!err)
+                    fail('an error should have been thrown for attempted duplicate channel creation'); 
+
+                expect(err.status).to.equal(409);
+            });
+
         });
     });
 });

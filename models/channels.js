@@ -18,10 +18,9 @@ exports.create = function(channel, callback) {
         channel.uuid = uuid.v4(); 
 
         // create the channel
-        redis.lpush(channelName, '', function(err) {
+        redis.lpush(channelName, 'N/A', function(err) {
             if (err)
                 console.log('there was an error!: ' + err);
-
 
             return callback(null, channel.uuid);
         });
