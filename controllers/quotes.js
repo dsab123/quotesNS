@@ -14,10 +14,8 @@ exports.create = function(req, res, next) {
         quotes = [quotes];
 
     model.create(quotes, function(err, data) {
-        // TODO: I need to check the return value and return a good response code
-        if (err)  {
+        if (err) 
             return res.status(err.status).json(err);
-        }
 
         next();
     });
