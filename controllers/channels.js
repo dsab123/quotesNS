@@ -17,7 +17,8 @@ exports.create = function(req, res, next) {
     if (exports.validateChannel(channel) == false)  
         return res.status(400).json({msg: "channel not in valid format!"});
 
-    model.create(channel, function(err) {
+    // data is the uuid, if I ever need it
+    model.create(channel, function(err, data) {
         if (err) {
             return res.status(err.status).json(err);
         } else
