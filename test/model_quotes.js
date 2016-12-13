@@ -84,7 +84,7 @@ describe("Quotes Model: ", function() {
             }, 
 
             lpush : function(channel, quote, callback) {
-                this.fake_array.push({ channel, quote});
+                this.fake_array.push({channel: quote});
             }
         };
 
