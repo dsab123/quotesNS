@@ -38,16 +38,20 @@ describe("Channels Model:", function() {
             },  
 
             lpush : function(channel, quote, callback) {
-                this.fake_array.push({channel, quote});
-
-                console.log('inside lpush!');
+                this.fake_array.push({channel: quote});
 
                 callback(null, uuid.v4());
             },
 
             exists: function(channel, callback) {
-                console.log('channel is: ' + channel);
-                return callback(null, 1);
+                var ret;
+
+                if (this.fake_array[channel] == undefined)
+                    ret = 0;
+                else
+                    ret = 1;
+
+                return callback(null, ret);
             }   
         };      
 
@@ -71,16 +75,13 @@ describe("Channels Model:", function() {
     });
     
     describe("model.create", function() {
-
-        it("returns nothing", function() {
-            console.log('sanity test yo');
-        });
-
-        it("should verify that a UUID was added to the channel object", function() {
+        it("should verify that a valid UUID was added to the channel object", function() {
             var channel = getValidChannel();
 
             model.create(channel, function(err, data) {
-                console.log("in callback: da UUID: " + channel.uuid);
+                if (err)
+                    fail('there was an error returned from model.create');
+
                 expect(channel.uuid).to.not.equal(undefined);
             });
         });
