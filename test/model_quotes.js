@@ -4,14 +4,17 @@ var expect = chai.expect;
 var mockery = require('mockery');
 var quotes; //controller
 
+// mock libs
+var redis = require('./redis-mock');
+
 // Tests
 describe("Quotes Model: ", function() {
-    var page, controller, req, res, redis, schedule;
+    var page, controller, req, res, schedule;
 
     afterEach(function() {
         mockery.deregisterAll();
 
-        redis.fake_array = [];
+        redis.clearRedisMock();;
     });
 
     // factory methods for easy testing and less brittle tests
@@ -70,24 +73,6 @@ describe("Quotes Model: ", function() {
             }
         };
 
-        redis = {
-            fake_array : [],
-            createClient: function() {
-                console.log("from mock createClient()");
-                // don't need to do anything here
-                return {
-                    on: function(cause, callback) {
-                        console.log("from mock redis.on");
-                        // don't need to do anything here
-                    } 
-                };
-            }, 
-
-            lpush : function(channel, quote, callback) {
-                this.fake_array.push({channel: quote});
-            }
-        };
-
         schedule = {
             cron_string: '',
             scheduleJob: function(schedule, callback) {
@@ -119,8 +104,10 @@ describe("Quotes Model: ", function() {
     describe("model.create", function() {
 
         it("should push all quotes in array to redis mock", function() {
+            // all these are on the same channel;
             var quotes_array = [getValidQuote(), getValidQuote(), getValidQuote(), getValidQuote()];
-
+            var channel = getValidQuote().channel;
+       
             // not sure if I should be mocking like this...
             var callback = function(err) {
                 if (err) return callback(err, null);
@@ -132,7 +119,7 @@ describe("Quotes Model: ", function() {
 
             model.create(quotes_array, callback); 
 
-            expect(redis.fake_array.length).to.equal(4);
+            expect(redis.llen(channel)).to.equal(4);
         });
 
         it("should NOT push elements from an empty array to redis mock", function() {
@@ -163,8 +150,6 @@ describe("Quotes Model: ", function() {
             expect(spy.calledOnce).to.equal(true);
 
         });
-
-
     });
 
     describe("model.validate", function() {

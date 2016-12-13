@@ -5,14 +5,16 @@ var mockery = require('mockery');
 var uuid = require('node-uuid');
 var model; // controller
 
+// mock libs
+var redis = require('./redis-mock');
 
 describe("Channels Model:", function() {
-    var redis;
 
     afterEach(function() {
         mockery.deregisterAll();
 
-        redis.fake_array = [];
+       // redis.fake_array = [];
+        redis.clearRedisMock();
     });
 
     // helper methods
@@ -24,38 +26,6 @@ describe("Channels Model:", function() {
     }
 
     beforeEach(function() {
-        redis = { 
-            fake_array : [], 
-            create: function() {
-                console.log("from mock createClient()");
-                // don't need to do anything here
-                return {
-                    on: function(cause, callback) {
-                        console.log("from mock redis.on");
-                        // don't need to do anything here
-                    }   
-                };  
-            },  
-
-            lpush : function(channel, quote, callback) {
-                this.fake_array[channel] = quote;
-
-
-                callback(null, uuid.v4());
-            },
-
-            exists: function(channel, callback) {
-                var ret;
-
-                if (this.fake_array[channel] == undefined)
-                    ret = 0;
-                else
-                    ret = 1;
-
-                return callback(null, ret);
-            }   
-        };      
-
         mockery.resetCache();
         mockery.enable({
             warnOnReplace: true,
