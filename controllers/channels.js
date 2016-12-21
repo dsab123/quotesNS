@@ -63,5 +63,5 @@ exports.delete = function(req, res, next) {
 /** schedules the channel to be played back
  */
 exports.schedule = function(req, res, next) {
-
+    console.log('inside channels.schedule');
 };
