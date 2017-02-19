@@ -46,3 +46,11 @@ exports.llen = function(channel) {
    
     return num; 
 }
+
+exports.lrange = function(channel) {
+    console.log('hkeys called');
+    
+
+
+
+}

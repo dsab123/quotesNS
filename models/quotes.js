@@ -39,8 +39,23 @@ exports.create = function(quotes, callback) {
 
     // TODO: what do I do if the channel doesn't exist?
     // create a new one?
+    console.log('woohoo reached here');
 
     // TODO: need to check if the quote already exists for this channel
+    // if redis contains quote, return callback 400 or something
+    // this is stupid because i could use a hash or set for this, but its been
+    // so long that I need to add _some_code before refactoring
+    redis.lrange(quote.channel, 0, -1, function(err, keys) {
+        if (err) return console.log(err);
+
+        for (var i = 0, len = keys.length; i < len; i++) {
+            console.log("i: " + keys[i]);
+
+            if (keys[i] == quote.quote) {
+                return callback({status:400, error: "this quote already exists in this channel"});
+            }
+        }
+    });
 
     // call channel.createChannel, right?
     redis.lpush(quote.channel, quote.quote, function(err) {
@@ -50,7 +65,6 @@ exports.create = function(quotes, callback) {
 
     return callback(null);
 };
-
 
 /**
  * Validates that the model has the correct properties

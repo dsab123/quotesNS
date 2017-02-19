@@ -17,8 +17,10 @@ exports.create = function(req, res, next) {
         if (err) 
             return res.status(err.status).json(err);
 
-        next();
+        // next();
     });
+
+    return res.status(200).json({status:200, msg: "quote added!"});
 };  
 
 exports.schedule = function(req, res, next) {

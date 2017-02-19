@@ -1,6 +1,6 @@
 var redis = require('../lib/redis');
 var uuid = require('node-uuid');
-var scheduler = require('./lib/scheduler');
+var scheduler = require('../lib/scheduler');
 
 // what I refer to here as a 'channel', redis refers to as a 
 // 'key'
@@ -37,13 +37,14 @@ exports.schedule = function(channelName, channelFrequency) {
     });
 
     // iterate through channel with generator
+    /*
     let index = 0;
     const frequencyInSeconds = channelFrequency*1000;
     setInterval(() => {
         let quote = getNextQuote(channelName, index);
 
     }, frequencyInSeconds);
-
+    */
     // no idea how to return multiple responses... need to read more
 
     return callback({status: 200, msg: quote});
