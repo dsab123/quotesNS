@@ -17,6 +17,7 @@ exports.create = function(req, res, next) {
         if (err) 
             return res.status(err.status).json(err);
 
+        // no next, because there's no other method in this flow
         // next();
     });
 
