@@ -48,9 +48,7 @@ exports.llen = function(channel) {
 }
 
 exports.lrange = function(channel) {
-    console.log('hkeys called');
+    console.log('lrange called');
     
-
-
-
+    return this.fake_cache;
 }

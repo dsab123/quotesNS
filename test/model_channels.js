@@ -28,7 +28,7 @@ describe("Channels Model:", function() {
     beforeEach(function() {
         mockery.resetCache();
         mockery.enable({
-            warnOnReplace: true,
+            warnOnReplace: false,
             warnOnUnregistered: true,
             useCleanCache: true
         });
@@ -39,10 +39,10 @@ describe("Channels Model:", function() {
         // register allowed modules
         mockery.registerAllowable('node-uuid');
         mockery.registerAllowable('crypto');
-        mockery.registerAllowable('../models/channels');
+        mockery.registerAllowable('../src/models/channels');
 
         // code under test
-        model = require('../models/channels');
+        model = require('../src/models/channels');
     });
     
     describe("model.create", function() {

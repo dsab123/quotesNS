@@ -4,7 +4,8 @@
   "description": "node server that pushes puritan quotes somewhere.",
   "main": "app.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node dist/app"
   },
   "author": "Daniel Sabbagh",
   "license": "ISC",
@@ -22,7 +23,16 @@
     "winston": "^2.2.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.1.8",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-2": "^6.22.0",
     "express-route-fake": "^0.2.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-strip-debug": "^1.1.0",
     "node-schedule": "^1.2.0",
     "nodemon": "^1.11.0",
     "sinon": "^1.17.6"

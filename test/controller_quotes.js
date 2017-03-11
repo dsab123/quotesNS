@@ -52,7 +52,7 @@ describe("Quotes Controller: ", function() {
         mockery.resetCache();
         mockery.enable({
             warnOnReplace: true,
-            warnOnUnregistered: true,
+            warnOnUnregistered: false,
             useCleanCache: true
         });
 
@@ -61,10 +61,10 @@ describe("Quotes Controller: ", function() {
 
         // register the allowables
         mockery.registerAllowables(['underscore']);
-        mockery.registerAllowable('../controllers/quotes');
+        mockery.registerAllowable('../src/controllers/quotes');
 
         // the code under test
-        quotes = require('../controllers/quotes');
+        quotes = require('../src/controllers/quotes');
     });
 
     afterEach(function() {

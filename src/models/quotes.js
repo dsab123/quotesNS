@@ -1,3 +1,5 @@
+'use strict';
+
 var redis = require('../lib/redis');
 var schedule = require('node-schedule');
 var _ = require('underscore');
@@ -11,6 +13,21 @@ var _ = require('underscore');
 exports.createChannel = function(channel, callback) {
     // is this possible?
     // I think this should just reroute to /channel/create
+};
+
+exports.isQuoteDuplicate = function(err, list, quote) {
+    if (err) return console.log(err);
+
+    console.log('quote is: ' + quote);
+    console.log('list is: ' + list.length);
+
+    for (var i = 0, len = list.length; i < len; i++) {
+        console.log("(REAL) " + i + ": " + list[i]);
+
+        if (list[i] == quote.quote) {
+            return callback({status:400, error: "this quote already exists in this channel"});
+        }
+    }
 };
 
 /**
@@ -30,7 +47,7 @@ exports.create = function(quotes, callback) {
         return callback({status: 400, error: "request body must be array"});
     }
 
-    var quote = quotes.pop();
+    let quote = quotes.pop();
 
     // this is where I'd do some sort of validation
     if (this.validate(quote) == false) {
@@ -38,24 +55,15 @@ exports.create = function(quotes, callback) {
     }
 
     // TODO: what do I do if the channel doesn't exist?
-    // create a new one?
-    console.log('woohoo reached here');
+    // create a new one? probably not
 
     // TODO: need to check if the quote already exists for this channel
     // if redis contains quote, return callback 400 or something
     // this is stupid because i could use a hash or set for this, but its been
     // so long that I need to add _some_code before refactoring
-    redis.lrange(quote.channel, 0, -1, function(err, keys) {
-        if (err) return console.log(err);
-
-        for (var i = 0, len = keys.length; i < len; i++) {
-            console.log("i: " + keys[i]);
-
-            if (keys[i] == quote.quote) {
-                return callback({status:400, error: "this quote already exists in this channel"});
-            }
-        }
-    });
+    redis.lrange(quote.channel, 0, -1, this.isQuoteDuplicate);
+    //var promise = redis.lrange(quote.channel, 0, -1);
+    //    promise.then(this.isQuoteDuplicate, this.handleError);
 
     // call channel.createChannel, right?
     redis.lpush(quote.channel, quote.quote, function(err) {

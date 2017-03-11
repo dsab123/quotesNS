@@ -1,5 +1,7 @@
 /* jshint node:true */
 
+require("babel-polyfill");
+
 var express = require('express');
 var app = express();
 
@@ -8,6 +10,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes');
 var winston = require('./lib/winston');
+
 
 
 // this be the json parser joint 

@@ -13,6 +13,8 @@ describe("Channels Controller: ", function() {
     var req_channel_already_created, req_new_channel, new_valid_book_channel, new_invalid_book_channel, res, next, model;
 
     beforeEach(function() {
+        console.log('in this joint');
+
         req_channel_already_created = {
             body: {
                 channel:'channel_already_created'
@@ -57,7 +59,6 @@ describe("Channels Controller: ", function() {
 
         model = {
             create: function(channel, callback) {
-                //var channelName = channel.body;
                 var channelName = channel.channel;
 
                 if (channelName == 'channel_already_created') {
@@ -71,7 +72,7 @@ describe("Channels Controller: ", function() {
         mockery.resetCache();
         mockery.enable({
             warnOnReplace: true,
-            warnOnUnregistered: true,
+            warnOnUnregistered: false,
             useCleanCache: true
         });
 
@@ -80,10 +81,10 @@ describe("Channels Controller: ", function() {
 
         // allow registered modules
         mockery.registerAllowables(['underscore']);
-        mockery.registerAllowable('../controllers/channels');
+        mockery.registerAllowable('../src/controllers/channels');
 
         // the code under test
-        channels = require('../controllers/channels');
+        channels = require('../src/controllers/channels');
     });
 
     afterEach(function() {

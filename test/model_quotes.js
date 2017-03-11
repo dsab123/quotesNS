@@ -83,7 +83,7 @@ describe("Quotes Model: ", function() {
         // mockery settings
         mockery.resetCache();
         mockery.enable({
-            warnOnReplace: true,
+            warnOnReplace: false,
             warnOnUnregistered: true,
             useCleanCache: true
         });
@@ -94,10 +94,10 @@ describe("Quotes Model: ", function() {
 
         // register allowed modules
         mockery.registerAllowables(['underscore']);
-        mockery.registerAllowable('../models/quotes');
+        mockery.registerAllowable('../src/models/quotes');
 
         // the code under test
-        model = require('../models/quotes');
+        model = require('../src/models/quotes');
     });
 
 
@@ -144,7 +144,7 @@ describe("Quotes Model: ", function() {
             });
 
             model.create([quote], function(err, data) {
-                console.log('return value: ' + data);
+                console.log('poop return value: ' + data);
             });
 
             expect(spy.calledOnce).to.equal(true);
